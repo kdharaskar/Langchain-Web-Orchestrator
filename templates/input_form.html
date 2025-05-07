@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Input Form</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        .container { background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+        h1 { color: #0056b3; text-align: center; }
+        label { display: block; margin-bottom: 8px; font-weight: bold; }
+        input[type="text"], textarea {
+            width: calc(100% - 22px); /* Account for padding and border */
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Important for width calculation */
+        }
+        textarea { min-height: 100px; resize: vertical; }
+        button[type="submit"] {
+            background-color: #0056b3;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+        button[type="submit"]:hover { background-color: #004494; }
+        .submitted-data { margin-top: 30px; padding: 15px; background-color: #e9ecef; border-radius: 4px; }
+        .submitted-data h2 { margin-top: 0; color: #0056b3; }
+        .submitted-data pre { background-color: #fff; padding: 10px; border: 1px solid #ccc; border-radius: 4px; white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enter Your Message Prompt</h1>
+
+        <form action="{{ url_for('submit_data') }}" method="POST">
+            <div>
+                <label for="user_name">Your Name (Optional):</label>
+                <input type="text" id="user_name" name="user_name" placeholder="e.g., John Doe">
+            </div>
+            <div>
+                <label for="message_prompt">Message Prompt:</label>
+                <textarea id="message_prompt" name="message_prompt" placeholder="Enter the core message or prompt here..." required></textarea>
+            </div>
+            <div>
+                <button type="submit">Send to Backend</button>
+            </div>
+        </form>
+
+        {% if submitted_prompt %}
+        <div class="submitted-data">
+            <h2>Data Sent to Backend:</h2>
+            <p><strong>Name:</strong> {{ submitted_name }}</p>
+            <p><strong>Prompt:</strong></p>
+            <pre>{{ submitted_prompt }}</pre>
+            <p><em>(This is just a demonstration. In a real app, you'd process this data.)</em></p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
