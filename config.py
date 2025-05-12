@@ -1,6 +1,10 @@
 import os
 from dotenv import load_dotenv
 
+EMAIL_SCHEDULE = False # Set to True if you want to schedule emails, False for drafting
+
+SLEEP_TIME = 1 # Time to sleep between sending emails (in seconds)
+
 BASE_URL = "https://www.isb.edu"
 OUTPUT_FILE = "../data/isb_faculty_directory.csv"
 

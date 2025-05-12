@@ -16,6 +16,7 @@ def generate_personalized_content(professor_details, user_name, user_mobile_numb
     Returns:
         str: The generated email body content.
     """
+
     # Extracting necessary details from the professor's information
     prof_name = professor_details.get('prof_name')
     prof_research_speciality = professor_details.get('prof_research_speciality')
@@ -110,6 +111,7 @@ def generate_personalized_content(professor_details, user_name, user_mobile_numb
     return response
 
 if __name__ == '__main__':
+    
     # Example usage
     PROFESSORS_DETAILS = {
         'prof_name': 'John Doe',

@@ -5,16 +5,6 @@ from .load_data import load_rows
 from .content_generator import generate_personalized_content
 from .email_scheduler import email_scheduler
 
-def get_user_core_message_details():
-    cv_mention = f"I have attached my CV, '{config.CV_FILENAME}', for your detailed review." \
-                 if config.CV_FILENAME else \
-                 "I have attached my CV for your detailed review."
-    return {
-        "introduction": f"""My name is {config.NAME}. I am a [Your Role/Status...].""",
-        "alignment_guidance": f"""I am writing to you because... {{prof_research_speciality}}... {{prof_biography_snippet}}...""",
-        "call_to_action": f"""{cv_mention} It outlines my qualifications..."""
-    }
-
 def main_orchestrator_script():
     print("Starting the professor cold emailing process...")
     if not config.check_essential_configs():
@@ -24,7 +14,39 @@ def main_orchestrator_script():
     professors = load_rows(config.CSV_FILE_PATH)
 
     for i, professor_details in enumerate(professors):
-        pass
+        
+        email_body = generate_personalized_content(
+            professor_details=professor_details,
+            user_name=config.NAME,
+            user_mobile_number=config.MOBILE_NUMBER
+        )
+
+        print(f"\nEmail content generated for {i}: {professor_details['prof_name']}.")
+        print(f"Scheduling email to {i}: {professor_details['prof_name']}...")
+
+        # Print the email body for debugging
+        print(f"Email Body:\n{email_body}")
+
+        # response = email_scheduler(
+        #     professor_details=professor_details,
+        #     email_body=email_body,
+        #     user_name=config.NAME,
+        #     user_mobile_number=config.MOBILE_NUMBER,
+        #     schedule = config.EMAIL_SCHEDULE
+        # )
+
+        # if response == "success":
+        #     print(f"Email scheduled for {professor_details['prof_name']}.")
+        #     print(f"Sleeping for {config.SLEEP_TIME} seconds to avoid rate limits...")
+        #     time.sleep(config.SLEEP_TIME)
+        # else:
+        #     print(f"Failed to schedule email for {professor_details['prof_name']}.")
+        #     print(f"Response: {response}")
+
+    print("All emails have been scheduled. Process completed.")
+    print("Please check your email client for the scheduled emails.")
 
 if __name__ == '__main__':
+    
+    # Run the main orchestrator script
     main_orchestrator_script()
