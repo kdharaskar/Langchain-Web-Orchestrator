@@ -15,6 +15,7 @@ def load_rows(file_path: str) -> list[dict]:
     """
 
     professors = []
+
     if not os.path.exists(file_path):
         print(f"Error: CSV file not found at {file_path}")
         return professors
@@ -28,7 +29,12 @@ def load_rows(file_path: str) -> list[dict]:
             reader = csv.DictReader(csvfile)
             # Check if essential columns are present in the header
             required_columns = ['Sr.No.', 'Name', 'Email', 'Academic-Area',
-                                'Research-Speciality']  # Add others if critical
+                                'Research-Speciality', 'Biography']  # Add others if critical
+            
+            if not reader.fieldnames:
+                print("Error: CSV file has no headers")
+                return professors
+
             if not all(col in reader.fieldnames for col in required_columns):
                 missing = [col for col in required_columns if col not in reader.fieldnames]
                 print(f"Error: CSV file is missing required columns: {', '.join(missing)}")

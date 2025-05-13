@@ -28,12 +28,9 @@ def generate_personalized_content(professor_details, user_name, user_mobile_numb
             raise ValueError("Missing required parameters")
 
         # Extracting necessary details from the professor's information
-        prof_name = professor_details.get('prof_name')
-        prof_research_speciality = professor_details.get('prof_research_speciality')
-        prof_biography_and_papers = professor_details.get('prof_biography_and_papers')
-
-        if not all([prof_name, prof_research_speciality, prof_biography_and_papers]):
-            raise ValueError("Missing required professor details")
+        prof_name = professor_details.get('Name')
+        prof_research_speciality = professor_details.get('Research-Speciality', "")
+        prof_biography_and_papers = professor_details.get('Biography', "")
 
         # Set up Google API
         if not config.GOOGLE_API_KEY:
@@ -43,17 +40,15 @@ def generate_personalized_content(professor_details, user_name, user_mobile_numb
 
         # Initialize the Gemini model
         llm = ChatGoogleGenerativeAI(
-            model="gemini-1.5-pro",
+            model="gemini-2.0-flash",
             temperature=config.LLM_TEMPERATURE,
             top_p=0.8,
             top_k=40,
-            max_output_tokens=1024
         )
 
         # Create the prompt template
         BODY_PROMPT_TEMPLATE = PromptTemplate(
-            input_variables=['your_name', 'prof_name', 'prof_research_speciality', 'prof_biography_and_papers',
-                           'your_introduction_text', 'your_skills_for_alignment', 'your_mobile_number'],
+            input_variables = ['your_name', 'prof_name', 'prof_research_speciality', 'prof_biography_and_papers', 'your_skills_for_alignment', 'your_mobile_number'],
             template="""
 Generate a professional and personalized email to Professor {prof_name}.
 
@@ -61,7 +56,6 @@ Context:
 - Professor's Research: {prof_research_speciality}
 - Professor's Background: {prof_biography_and_papers}
 - Your Name: {your_name}
-- Your Introduction: {your_introduction_text}
 - Your Skills: {your_skills_for_alignment}
 - Your Contact: {your_mobile_number}
 
@@ -82,8 +76,7 @@ Keep the email concise, professional, and focused on research alignment.
             'your_name': user_name,
             'prof_name': prof_name,
             'prof_research_speciality': prof_research_speciality,
-            'prof_biography_and_papers': prof_biography_and_papers[:1000],  # Truncate to avoid token limits
-            'your_introduction_text': config.INTRODUCTION_TEXT,
+            'prof_biography_and_papers': prof_biography_and_papers,
             'your_skills_for_alignment': config.SKILLS_FOR_ALIGNMENT,
             'your_mobile_number': user_mobile_number
         })

@@ -1,12 +1,6 @@
 import os
 import time
 import config
-import sys
-from pathlib import Path
-
-# Add the parent directory to sys.path to allow importing config
-sys.path.append(str(Path(__file__).parent.parent))
-
 from utils.load_data import load_rows
 from utils.content_generator import generate_personalized_content
 from utils.email_scheduler import email_scheduler
@@ -32,8 +26,8 @@ def main_orchestrator_script():
                 user_mobile_number=config.MOBILE_NUMBER
             )
 
-            print(f"\nEmail content generated for {i}: {professor_details['prof_name']}.")
-            print(f"Scheduling email to {i}: {professor_details['prof_name']}...")
+            print(f"\nEmail content generated for {i}: {professor_details['Name']}.")
+            print(f"Scheduling email to {i}: {professor_details['Name']}...")
 
             # Print the email body for debugging
             print(f"Email Body:\n{email_body}")
@@ -47,14 +41,14 @@ def main_orchestrator_script():
             )
 
             if response == "success":
-                print(f"Email {'scheduled' if config.EMAIL_SCHEDULE else 'saved as draft'} for {professor_details['prof_name']}.")
+                print(f"Email {'scheduled' if config.EMAIL_SCHEDULE else 'saved as draft'} for {professor_details['Name']}.")
                 print(f"Sleeping for {config.SLEEP_TIME} seconds to avoid rate limits...")
                 time.sleep(config.SLEEP_TIME)
             else:
-                print(f"Failed to {'schedule' if config.EMAIL_SCHEDULE else 'save'} email for {professor_details['prof_name']}.")
+                print(f"Failed to {'schedule' if config.EMAIL_SCHEDULE else 'save'} email for {professor_details['Name']}.")
                 print(f"Response: {response}")
         except Exception as e:
-            print(f"Error processing professor {professor_details.get('prof_name', 'Unknown')}: {str(e)}")
+            print(f"Error processing professor {professor_details.get('Name', 'Unknown')}: {str(e)}")
             continue
 
     print("All emails have been processed. Process completed.")

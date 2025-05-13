@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 
 EMAIL_SCHEDULE = False # Set to True if you want to schedule emails, False for drafting
 
-SLEEP_TIME = 1 # Time to sleep between sending emails (in seconds)
+SLEEP_TIME = 5 # Time to sleep between sending emails (in seconds)
 
 BASE_URL = "https://www.isb.edu"
 OUTPUT_FILE = "../data/isb_faculty_directory.csv"
@@ -40,18 +40,18 @@ SMTP_PORT = int(os.getenv("SMTP_PORT", 587)) # Common port for TLS; 465 for SSL
 
 # --- Application Paths and File Names ---
 DATA_DIR = os.path.join(BASE_DIR, "data")
-CSV_FILENAME = os.getenv("CSV_FILENAME", "isb_faculty.csv")
+CSV_FILENAME = os.getenv("CSV_FILENAME", "isb_faculty_directory.csv")
 CSV_FILE_PATH = os.path.join(DATA_DIR, CSV_FILENAME)
 
 # --- User-Specific Information (User MUST customize these) ---
-NAME = os.getenv("NAME_CONFIG")
+NAME = os.getenv("NAME")
 MOBILE_NUMBER = os.getenv("MOBILE_NUMBER")
 CV_FILENAME = os.getenv("CV_FILENAME", "cv.pdf")
 CV_FILE_PATH = os.getenv("CV_FILE_PATH", os.path.join(DATA_DIR, CV_FILENAME))
 
 # --- Email Content Configuration ---
-INTRODUCTION_TEXT = os.getenv("INTRODUCTION_TEXT", "I am writing to express my interest in research opportunities under your guidance.")
-SKILLS_FOR_ALIGNMENT = os.getenv("SKILLS_FOR_ALIGNMENT", "")
+INTRODUCTION_TEXT = os.getenv("INTRODUCTION_TEXT")
+SKILLS_FOR_ALIGNMENT = os.getenv("SKILLS_FOR_ALIGNMENT")
 
 # --- Google API Configuration ---
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
@@ -74,8 +74,6 @@ def check_essential_configs():
         "APP_EMAIL_PASSWORD": APP_EMAIL_PASSWORD,
         "NAME": NAME,
         "MOBILE_NUMBER": MOBILE_NUMBER,
-        "INTRODUCTION_TEXT": INTRODUCTION_TEXT,
-        "SKILLS_FOR_ALIGNMENT": SKILLS_FOR_ALIGNMENT
     }
 
     for key, value in critical_vars.items():
