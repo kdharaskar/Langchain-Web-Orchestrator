@@ -39,15 +39,14 @@ SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", 587)) # Common port for TLS; 465 for SSL
 
 # --- Application Paths and File Names ---
-# Path to the data directory, relative to the project root (BASE_DIR)
 DATA_DIR = os.path.join(BASE_DIR, "data")
-CSV_FILENAME = os.getenv("CSV_FILENAME")
+CSV_FILENAME = os.getenv("CSV_FILENAME", "isb_faculty.csv")
 CSV_FILE_PATH = os.path.join(DATA_DIR, CSV_FILENAME)
 
 # --- User-Specific Information (User MUST customize these) ---
 NAME = os.getenv("NAME_CONFIG")
 MOBILE_NUMBER = os.getenv("MOBILE_NUMBER")
-CV_FILENAME = os.getenv("CV_FILENAME")
+CV_FILENAME = os.getenv("CV_FILENAME", "cv.pdf")
 CV_FILE_PATH = os.getenv("CV_FILE_PATH", os.path.join(DATA_DIR, CV_FILENAME))
 
 # --- Email Content Configuration ---
