@@ -45,10 +45,17 @@ CSV_FILENAME = os.getenv("CSV_FILENAME")
 CSV_FILE_PATH = os.path.join(DATA_DIR, CSV_FILENAME)
 
 # --- User-Specific Information (User MUST customize these) ---
-
 NAME = os.getenv("NAME_CONFIG")
+MOBILE_NUMBER = os.getenv("MOBILE_NUMBER")
 CV_FILENAME = os.getenv("CV_FILENAME")
 CV_FILE_PATH = os.getenv("CV_FILE_PATH", os.path.join(DATA_DIR, CV_FILENAME))
+
+# --- Email Content Configuration ---
+INTRODUCTION_TEXT = os.getenv("INTRODUCTION_TEXT", "I am writing to express my interest in research opportunities under your guidance.")
+SKILLS_FOR_ALIGNMENT = os.getenv("SKILLS_FOR_ALIGNMENT", "")
+
+# --- Google API Configuration ---
+GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
 # --- Sanity Checks for Essential Configurations ---
 def check_essential_configs():
@@ -63,37 +70,43 @@ def check_essential_configs():
 
     # Critical configurations that MUST be set
     critical_vars = {
-        "OPENAI_API_KEY": OPENAI_API_KEY,
+        "GOOGLE_API_KEY": GOOGLE_API_KEY,
         "APP_EMAIL_ADDRESS": APP_EMAIL_ADDRESS,
         "APP_EMAIL_PASSWORD": APP_EMAIL_PASSWORD,
+        "NAME": NAME,
+        "MOBILE_NUMBER": MOBILE_NUMBER,
+        "INTRODUCTION_TEXT": INTRODUCTION_TEXT,
+        "SKILLS_FOR_ALIGNMENT": SKILLS_FOR_ALIGNMENT
     }
+
     for key, value in critical_vars.items():
-        if not value:
+        if not value or value.strip() == "":
             warnings.append(f"CRITICAL: '{key}' is not set in your .env file. Application might not work.")
             all_good = False
+        elif value in ["Your Name", "Your Mobile Number", "Your Introduction", "Your Skills"]:
+            warnings.append(f"CRITICAL: '{key}' is using a placeholder value. Please update in .env file.")
+            all_good = False
 
-    # Configurations that should be customized by the user
-    user_custom_vars = {
-        "NAME": (NAME, "Your Name"), # (variable, placeholder_value)
-        "YOUR_CV_FILENAME": (CV_FILENAME, "Your_CV.pdf"),
-        "YOUR_CV_PATH": (CV_FILE_PATH, os.path.join(BASE_DIR, "Your_CV.pdf")) # Compare against default constructed placeholder
-    }
-    for key, (value, placeholder) in user_custom_vars.items():
-        if value == placeholder:
-            warnings.append(f"NOTICE: '{key}' is using a default placeholder value ('{value}'). Please customize it in config_settings.py or your .env file.")
-        elif key == "YOUR_CV_PATH" and not os.path.exists(value):
-             warnings.append(f"NOTICE: CV file for '{key}' not found at '{value}'. Please ensure the path is correct.")
-
+    # Check CSV file existence
     if not os.path.exists(CSV_FILE_PATH):
-        warnings.append(f"NOTICE: CSV data file not found at '{CSV_FILE_PATH}'. Data loading will fail.")
+        warnings.append(f"CRITICAL: CSV data file not found at '{CSV_FILE_PATH}'. Data loading will fail.")
         all_good = False
 
+    # Check data directory existence
+    if not os.path.exists(DATA_DIR):
+        try:
+            os.makedirs(DATA_DIR)
+            print(f"Created data directory at: {DATA_DIR}")
+        except Exception as e:
+            warnings.append(f"CRITICAL: Could not create data directory: {e}")
+            all_good = False
+
     if warnings:
-        print("Configuration Issues Found:")
+        print("\nConfiguration Issues Found:")
         for warning in warnings:
             print(f"- {warning}")
     else:
-        print("All checked configurations seem to be in order or customized.")
+        print("All checked configurations seem to be in order.")
 
     print("--- End Configuration Check ---\n")
     return all_good

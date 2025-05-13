@@ -5,3 +5,4 @@ flask
 langchain
 langchain-openai
 python-dotenv
+langchain-google-genai
