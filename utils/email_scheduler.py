@@ -1,5 +1,5 @@
 import json
-
+import os
 def email_scheduler(professor_details, email_body, user_name, user_mobile_number, schedule):
     """
     Saves professor details and email body to a JSON file if schedule is False.
@@ -18,10 +18,11 @@ def email_scheduler(professor_details, email_body, user_name, user_mobile_number
         str: A message indicating the action taken.
              If schedule is False, returns a message about saving to JSON.
     """
+    file_path = "data/email_data.json"
 
     if not schedule:
         # Try to get professor_name, handling potential KeyError
-        professor_name = professor_details.get('prof_name', professor_details.get('name', 'N/A'))
+        professor_name = professor_details.get('prof_name', professor_details.get('Name', 'N/A'))
 
         data_to_save = {
             "professor_name": professor_name,
@@ -30,8 +31,15 @@ def email_scheduler(professor_details, email_body, user_name, user_mobile_number
             "user_mobile_number": user_mobile_number
         }
         try:
-            with open("data/email_data.json", "w") as json_file:
-                json.dump(data_to_save, json_file, indent=4)
+            if os.path.getsize(file_path) > 0:
+                with open(file_path, "r") as json_file:
+                    data = json.load(json_file)
+                    data.append(data_to_save)
+            else:
+                data = [data_to_save]
+
+            with open(file_path, "w") as json_file:
+                json.dump(data, json_file, indent=4)
             return "success"
         except IOError:
             return "Error: Could not write to email_data.json."

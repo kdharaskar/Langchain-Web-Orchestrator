@@ -50,35 +50,48 @@ def generate_personalized_content(professor_details, user_name, user_mobile_numb
         BODY_PROMPT_TEMPLATE = PromptTemplate(
             input_variables = ['your_name', 'prof_name', 'prof_research_speciality', 'prof_biography_and_papers', 'your_skills_for_alignment', 'your_mobile_number'],
             template="""
-Generate a professional and personalized email to Professor {prof_name}.
+You are an AI assistant specializing in crafting personalized outreach emails to professors for research opportunities. You are provided with the following information:
 
-Context:
-- Professor's Research: {prof_research_speciality}
-- Professor's Background: {prof_biography_and_papers}
-- Your Name: {your_name}
-- Your Skills: {your_skills_for_alignment}
-- Your Contact: {your_mobile_number}
+Professor's Name: {prof_name}
+Professor's Biography: {prof_biography_and_papers}
 
-Guidelines:
-1. Start with "Dear Professor {prof_name},"
-2. First paragraph: Brief introduction and purpose
-3. Second paragraph: Connect your skills to their research
-4. Final paragraph: Express interest in collaboration and thank them
-5. End with "Best regards," followed by your name and contact
+Generic Email Template:
 
-Keep the email concise, professional, and focused on research alignment.
+Dear Professor [Professor Name],
+
+Greetings for the day!
+
+I am Krushna Dharaskar. A graduate with a B.Tech in Artificial Intelligence with 1.5 years of experience in data analytics with a strong foundation in Python, Big Data, ML, Gen AI, and SQL, and was an undergraduate researcher in the center of excellence lab.
+
+I have been following your work in [] and I found it very interesting. I am strongly interested in being part of your research projects, and I believe my mindset to make a greater contribution to research and my data analytical skills could be a valuable asset in supporting your research.
+
+I request if there is an open position for any of the projects you work on.
+
+I will be committed to the work. I plan to pursue a PhD in the future in management studies. I hope you will consider my application for research collaboration. I have also attached my resume for your reference.
+
+Thank you for your time and consideration.
+
+Yours Sincerely,
+Krushna Dharaskar
+
+Instructions:
+
+Replace [Professor Name]: Substitute the provided Professor's Name into the email template.
+
+Identify Research Area: Carefully analyze the Professor's Biography to identify the Professor's primary research area(s). Look for keywords, specific project mentions, publications, and overall themes. The research area should be a specific topic, not just a general field like "Computer Science". Examples could be "Natural Language Processing for Education", "Quantum Computing Algorithms", "Sustainable Energy Policy", etc.
+
+Replace [] with Research Area: Replace the [] placeholder in the sentence "I have been following your work in [] and I found it very interesting." with a concise and accurate description of the Professor's research area as determined in step 2. The sentence should read in a natural and grammatically correct manner. Make sure it fits the flow of the sentence and sounds genuinely interested in the Professor's work.
+
+Output: Provide the complete modified email, with both placeholders replaced. Only output the full email with the edits made.
+
 """
         )
 
         # Create an LLMChain and generate the response
         chain = LLMChain(llm=llm, prompt=BODY_PROMPT_TEMPLATE)
         response = chain.run({
-            'your_name': user_name,
             'prof_name': prof_name,
-            'prof_research_speciality': prof_research_speciality,
             'prof_biography_and_papers': prof_biography_and_papers,
-            'your_skills_for_alignment': config.SKILLS_FOR_ALIGNMENT,
-            'your_mobile_number': user_mobile_number
         })
 
         return response.strip()

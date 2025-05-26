@@ -1,5 +1,9 @@
 import os
 import time
+import sys
+
+sys.path.append(os.path.abspath('.')) 
+
 import config
 from utils.load_data import load_rows
 from utils.content_generator import generate_personalized_content
